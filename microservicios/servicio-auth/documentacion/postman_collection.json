@@ -1,0 +1,68 @@
+{
+  "info": {
+    "name": "Escuela 5 Estrellas - Auth Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Registro",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre_usuario\": \"Juan Perez\",\n  \"correo\": \"juan@escuela.com\",\n  \"contrasena\": \"secreta123\",\n  \"rol\": \"Director\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/auth/registro",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "registro"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"correo\": \"juan@escuela.com\",\n  \"contrasena\": \"secreta123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

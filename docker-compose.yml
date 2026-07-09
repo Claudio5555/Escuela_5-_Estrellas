@@ -1,0 +1,37 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_escuela
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Escuela5Estrellas_2026!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Escuela5Estrellas_2026!" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  servicio-auth:
+    image: escuela5estrellas/servicio-auth:latest
+    build:
+      context: ./microservicios/servicio-auth
+      dockerfile: Dockerfile
+    container_name: servicio_auth
+    environment:
+      - PORT=3000
+      - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
+      - DATABASE_URL=sqlserver://sqlserver:1433;database=EscuelaDB;user=sa;password=Escuela5Estrellas_2026!;encrypt=true;trustServerCertificate=true
+    ports:
+      - "3000:3000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver_data:
