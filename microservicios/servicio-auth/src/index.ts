@@ -9,6 +9,10 @@ app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_key_jwt_5_estrellas_2026';
 
+app.get('/health', (_req, res) => {
+  res.status(200).json({ status: 'Servicio Auth operando correctamente' });
+});
+
 // Endpoint para Registro
 app.post('/api/auth/registro', async (req: Request, res: Response): Promise<void> => {
   try {
