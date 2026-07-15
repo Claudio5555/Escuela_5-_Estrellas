@@ -16,5 +16,5 @@ COPY . .
 
 EXPOSE 3000
 
-# Script de inicio: sincroniza la BD y luego arranca la app
-CMD sh -c "npx prisma db push && npm run dev"
+# Script de inicio: sincroniza la BD y luego arranca la app en producción
+CMD sh -c "npx prisma db push && npm run build && npm start"
