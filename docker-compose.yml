@@ -1,22 +1,4 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver_escuela
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Escuela5Estrellas_2026!
-      - MSSQL_PID=Developer
-    ports:
-      - "1433:1433"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
-    healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "Escuela5Estrellas_2026!" -C -Q "SELECT 1" || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
   servicio-auth:
     image: escuela5estrellas/servicio-auth:latest
     build:
@@ -26,12 +8,45 @@ services:
     environment:
       - PORT=3000
       - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
-      - DATABASE_URL=sqlserver://sqlserver:1433;database=EscuelaDB;user=sa;password=Escuela5Estrellas_2026!;encrypt=true;trustServerCertificate=true
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?schema=auth
     ports:
       - "3000:3000"
     depends_on:
-      sqlserver:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres_escuela
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=escuela5estrellas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d escuela5estrellas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  servicio-estudiantes:
+    image: escuela5estrellas/servicio-estudiantes:latest
+    build:
+      context: ./microservicios/servicio-estudiantes
+      dockerfile: Dockerfile
+    container_name: servicio_estudiantes
+    environment:
+      - PORT=3001
+      - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?schema=estudiantes
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
         condition: service_healthy
 
 volumes:
-  sqlserver_data:
+  postgres_data:
