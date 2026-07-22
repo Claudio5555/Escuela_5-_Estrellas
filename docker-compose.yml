@@ -48,5 +48,17 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    image: escuela5estrellas/frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend_escuela
+    ports:
+      - "5173:80"
+    depends_on:
+      - servicio-auth
+
 volumes:
   postgres_data:
+

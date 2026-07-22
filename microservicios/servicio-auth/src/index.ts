@@ -1,10 +1,12 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const prisma = new PrismaClient();
+
+app.use(cors());
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret_key_jwt_5_estrellas_2026';

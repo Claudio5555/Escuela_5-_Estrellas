@@ -33,6 +33,20 @@ services:
           name: escuela5estrellas-db
           property: connectionString
 
+  - type: web
+    name: frontend-escuela5estrellas
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: VITE_AUTH_API_URL
+        fromService:
+          type: web
+          name: servicio-auth
+          property: host
+
 databases:
   - name: escuela5estrellas-db
     databaseName: escuela5estrellas
