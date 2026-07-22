@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Star, CheckCircle, AlertCircle } from 'lucide-react';
 import { registrarUsuario } from '../services/authService';
 
 export default function RegisterForm({ onSwitchToLogin }) {
@@ -30,7 +31,7 @@ export default function RegisterForm({ onSwitchToLogin }) {
 
     try {
       await registrarUsuario(formData);
-      setExito('¡Cuenta creada con éxito! Ya puedes iniciar sesión.');
+      setExito('¡Cuenta creada con éxito!');
       setFormData({
         nombre_usuario: '',
         correo: '',
@@ -39,39 +40,48 @@ export default function RegisterForm({ onSwitchToLogin }) {
       });
       setTimeout(() => {
         onSwitchToLogin();
-      }, 2000);
+      }, 1800);
     } catch (err) {
-      setError(err.message || 'Ocurrió un error al registrar el usuario');
+      setError(err.message || 'Error al registrar el usuario');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="glass-card animate-fade-in" style={{ padding: '40px 36px' }}>
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-        <div style={{ fontSize: '2.2rem', marginBottom: '10px', filter: 'drop-shadow(0 4px 10px rgba(245, 158, 11, 0.4))' }}>
-          ⭐️⭐️⭐️⭐️⭐️
+    <div className="glass-card animate-fade-in" style={{ padding: '32px 36px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '22px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '10px' }}>
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={22} className="star-icon" />
+          ))}
         </div>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>
           Crear Cuenta
         </h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginTop: '6px' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginTop: '4px' }}>
           Sistema de Gestión Educativa Escuela 5 Estrellas
         </p>
       </div>
 
-      {error && <div className="alert alert-error">⚠️ {error}</div>}
-      {exito && <div className="alert alert-success">✅ {exito}</div>}
+      {error && (
+        <div className="alert alert-error">
+          <AlertCircle size={18} /> <span>{error}</span>
+        </div>
+      )}
+      {exito && (
+        <div className="alert alert-success">
+          <CheckCircle size={18} /> <span>{exito}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label">Nombre Completo</label>
           <input
             type="text"
             name="nombre_usuario"
             className="form-input"
-            placeholder="Ej. Prof. Juan Pérez"
+            placeholder="Nombre Completo"
             value={formData.nombre_usuario}
             onChange={handleChange}
             required
@@ -79,12 +89,11 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Correo Electrónico</label>
           <input
             type="email"
             name="correo"
             className="form-input"
-            placeholder="correo@escuela.com"
+            placeholder="Correo Electrónico"
             value={formData.correo}
             onChange={handleChange}
             required
@@ -92,12 +101,11 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Contraseña</label>
           <input
             type="password"
             name="contrasena"
             className="form-input"
-            placeholder="••••••••"
+            placeholder="Contraseña"
             value={formData.contrasena}
             onChange={handleChange}
             required
@@ -106,7 +114,6 @@ export default function RegisterForm({ onSwitchToLogin }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Rol en la Escuela</label>
           <select
             name="rol"
             className="form-select"
@@ -118,12 +125,12 @@ export default function RegisterForm({ onSwitchToLogin }) {
           </select>
         </div>
 
-        <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '14px' }}>
+        <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '10px' }}>
           {loading ? 'Registrando...' : 'Registrar Cuenta'}
         </button>
       </form>
 
-      <div style={{ textAlign: 'center', marginTop: '28px', fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+      <div style={{ textAlign: 'center', marginTop: '18px', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
         ¿Ya tienes cuenta?{' '}
         <span
           onClick={onSwitchToLogin}

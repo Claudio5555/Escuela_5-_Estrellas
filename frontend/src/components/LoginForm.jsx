@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Star, AlertCircle } from 'lucide-react';
 import { loginUsuario } from '../services/authService';
 
 export default function LoginForm({ onSwitchToRegister, onLoginSuccess }) {
@@ -37,25 +38,34 @@ export default function LoginForm({ onSwitchToRegister, onLoginSuccess }) {
   };
 
   return (
-    <div className="glass-card animate-fade-in" style={{ padding: '36px', maxWidth: '440px', width: '100%' }}>
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>⭐️⭐️⭐️⭐️⭐️</div>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ffffff' }}>Iniciar Sesión</h2>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px' }}>
+    <div className="glass-card animate-fade-in" style={{ padding: '32px 36px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '22px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '6px', marginBottom: '10px' }}>
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={22} className="star-icon" />
+          ))}
+        </div>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>
+          Iniciar Sesión
+        </h2>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.86rem', marginTop: '4px' }}>
           Bienvenido a Escuela 5 Estrellas
         </p>
       </div>
 
-      {error && <div className="alert alert-error">⚠️ {error}</div>}
+      {error && (
+        <div className="alert alert-error">
+          <AlertCircle size={18} /> <span>{error}</span>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label">Correo Electrónico</label>
           <input
             type="email"
             name="correo"
             className="form-input"
-            placeholder="correo@escuela.com"
+            placeholder="Correo Electrónico"
             value={formData.correo}
             onChange={handleChange}
             required
@@ -63,12 +73,11 @@ export default function LoginForm({ onSwitchToRegister, onLoginSuccess }) {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Contraseña</label>
           <input
             type="password"
             name="contrasena"
             className="form-input"
-            placeholder="••••••••"
+            placeholder="Contraseña"
             value={formData.contrasena}
             onChange={handleChange}
             required
@@ -80,11 +89,11 @@ export default function LoginForm({ onSwitchToRegister, onLoginSuccess }) {
         </button>
       </form>
 
-      <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+      <div style={{ textAlign: 'center', marginTop: '18px', fontSize: '0.88rem', color: 'var(--text-muted)' }}>
         ¿No tienes una cuenta aún?{' '}
         <span
           onClick={onSwitchToRegister}
-          style={{ color: 'var(--primary-color)', cursor: 'pointer', fontWeight: 700, textDecoration: 'underline' }}
+          style={{ color: '#60a5fa', cursor: 'pointer', fontWeight: 700, textDecoration: 'underline' }}
         >
           Regístrate aquí
         </span>
