@@ -49,6 +49,38 @@ services:
       postgres:
         condition: service_healthy
 
+  servicio-asistencia:
+    image: escuela5estrellas/servicio-asistencia:latest
+    build:
+      context: ./microservicios/servicio-asistencia
+      dockerfile: Dockerfile
+    container_name: servicio_asistencia
+    environment:
+      - PORT=3002
+      - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?schema=asistencia
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  servicio-reportes:
+    image: escuela5estrellas/servicio-reportes:latest
+    build:
+      context: ./microservicios/servicio-reportes
+      dockerfile: Dockerfile
+    container_name: servicio_reportes
+    environment:
+      - PORT=3003
+      - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?schema=reportes
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   frontend:
     image: escuela5estrellas/frontend:latest
     build:
@@ -59,7 +91,9 @@ services:
       - "5173:80"
     depends_on:
       - servicio-auth
+      - servicio-estudiantes
+      - servicio-asistencia
+      - servicio-reportes
 
 volumes:
   postgres_data:
-

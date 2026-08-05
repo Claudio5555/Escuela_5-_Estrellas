@@ -9,15 +9,14 @@ RUN apk add --no-cache openssl
 COPY package*.json ./
 RUN npm install
 
-# Copiar el esquema de Prisma, config y generar el cliente
+# Copiar el esquema de Prisma y generar el cliente
 COPY prisma ./prisma/
-COPY prisma.config.ts ./
 RUN npx prisma generate
 
 # Copiar el resto del codigo fuente
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3003
 
-# Script de inicio: sincroniza la BD, ejecuta el seed del Director y luego arranca la app en produccion
-CMD sh -c "npx prisma db push && npm run seed && npm run build && npm start"
+# Script de inicio: sincroniza la BD y luego arranca la app en produccion
+CMD sh -c "npx prisma db push && npm run build && npm start"

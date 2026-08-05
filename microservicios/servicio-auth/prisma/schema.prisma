@@ -12,6 +12,7 @@ model Usuario {
   nombre_usuario String
   correo         String   @unique
   contrasena     String
-  rol            String   // 'Director' o 'Maestro'
+  rol            String   // 'Director', 'Maestro' o 'Alumno'
+  id_alumno      Int?     // Vinculo con el registro de alumno en servicio-estudiantes
   fecha_creacion DateTime @default(now())
 }

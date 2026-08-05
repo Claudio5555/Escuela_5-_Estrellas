@@ -34,6 +34,40 @@ services:
           property: connectionString
 
   - type: web
+    name: servicio-asistencia
+    env: docker
+    dockerfilePath: ./microservicios/servicio-asistencia/Dockerfile
+    dockerContext: ./microservicios/servicio-asistencia
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: escuela5estrellas-db
+          property: connectionString
+
+  - type: web
+    name: servicio-reportes
+    env: docker
+    dockerfilePath: ./microservicios/servicio-reportes/Dockerfile
+    dockerContext: ./microservicios/servicio-reportes
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: escuela5estrellas-db
+          property: connectionString
+
+  - type: web
     name: frontend-escuela5estrellas
     env: static
     buildCommand: cd frontend && npm install && npm run build
@@ -45,6 +79,21 @@ services:
         fromService:
           type: web
           name: servicio-auth
+          property: host
+      - key: VITE_ESTUDIANTES_API_URL
+        fromService:
+          type: web
+          name: servicio-estudiantes
+          property: host
+      - key: VITE_ASISTENCIA_API_URL
+        fromService:
+          type: web
+          name: servicio-asistencia
+          property: host
+      - key: VITE_REPORTES_API_URL
+        fromService:
+          type: web
+          name: servicio-reportes
           property: host
 
 databases:

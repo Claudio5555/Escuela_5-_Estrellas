@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Asistencia {
+  id_asistencia  Int      @id @default(autoincrement())
+  id_alumno      Int
+  id_salon       Int
+  fecha          DateTime @db.Date
+  estado         String   // 'Presente', 'Ausente', 'Tardanza', 'Justificado'
+  observacion    String?
+  registrado_por Int      // id_usuario del maestro/director que registro
+  fecha_registro DateTime @default(now())
+
+  @@unique([id_alumno, fecha])
+}
