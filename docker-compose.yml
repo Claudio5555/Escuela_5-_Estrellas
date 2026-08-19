@@ -74,7 +74,7 @@ services:
     environment:
       - PORT=3003
       - JWT_SECRET=supersecret_key_jwt_5_estrellas_2026
-      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?schema=reportes
+      - DATABASE_URL=postgresql://admin:admin@postgres:5432/escuela5estrellas?options=-csearch_path%3Destudiantes%2Casistencia%2Cpublic
     ports:
       - "3003:3003"
     depends_on:
