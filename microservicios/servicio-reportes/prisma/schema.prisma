@@ -7,18 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelos de lectura - el servicio de reportes consulta las tablas creadas por otros servicios
-model Asistencia {
-  id_asistencia  Int      @id @default(autoincrement())
-  id_alumno      Int
-  id_salon       Int
-  fecha          DateTime @db.Date
-  estado         String
-  observacion    String?
-  registrado_por Int
-  fecha_registro DateTime @default(now())
+model Usuario {
+  id_usuario     Int      @id @default(autoincrement())
+  nombre_usuario String
+  correo         String   @unique
+  contrasena     String
+  rol            String   // 'Director', 'Maestro' o 'Alumno'
+  id_alumno      Int?     // Vinculo con el registro de alumno en servicio-estudiantes
+  fecha_creacion DateTime @default(now())
+}
 
-  @@unique([id_alumno, fecha])
+model Salon {
+  id_salon   Int      @id @default(autoincrement())
+  grado      String
+  seccion    String
+  id_maestro Int
+  alumnos    Alumno[]
+
+  @@unique([grado, seccion])
 }
 
 model Alumno {
@@ -26,14 +32,20 @@ model Alumno {
   nombre         String
   apellido       String
   fecha_creacion DateTime @default(now())
+  
   id_salon       Int
+  salon          Salon    @relation(fields: [id_salon], references: [id_salon])
 }
 
-model Salon {
-  id_salon   Int    @id @default(autoincrement())
-  grado      String
-  seccion    String
-  id_maestro Int
+model Asistencia {
+  id_asistencia  Int      @id @default(autoincrement())
+  id_alumno      Int
+  id_salon       Int
+  fecha          DateTime @db.Date
+  estado         String   // 'Presente', 'Ausente', 'Tardanza', 'Justificado'
+  observacion    String?
+  registrado_por Int      // id_usuario del maestro/director que registro
+  fecha_registro DateTime @default(now())
 
-  @@unique([grado, seccion])
+  @@unique([id_alumno, fecha])
 }
