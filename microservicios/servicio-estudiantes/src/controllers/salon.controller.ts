@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
+import { AuthRequest } from '../middlewares/auth.middleware';
 
 const prisma = new PrismaClient();
 
-export const obtenerSalones = async (req: Request, res: Response) => {
+export const obtenerSalones = async (req: AuthRequest, res: Response) => {
   try {
+    const whereClause = req.user?.rol === 'Maestro' ? { id_maestro: req.user.id_usuario } : {};
+
     const salones = await prisma.salon.findMany({
+      where: whereClause,
       include: {
         _count: {
           select: { alumnos: true }
